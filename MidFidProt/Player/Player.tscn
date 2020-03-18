@@ -1,0 +1,179 @@
+[gd_scene load_steps=22 format=2]
+
+[ext_resource path="res://Player/Sounds/jumpSound.wav" type="AudioStream" id=1]
+[ext_resource path="res://Player/Sounds/deathSound.wav" type="AudioStream" id=2]
+[ext_resource path="res://Player/Sprites/playerRun.png" type="Texture" id=3]
+[ext_resource path="res://Player/Movement.gd" type="Script" id=4]
+[ext_resource path="res://Player/Sprites/playerIdle.png" type="Texture" id=5]
+[ext_resource path="res://playerPunch.png" type="Texture" id=6]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 5 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 5 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 5 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 5 )
+region = Rect2( 32, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 5 )
+region = Rect2( 0, 64, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=6]
+animations = [ {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 3, 7 )
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 2, 2 )
+
+[sub_resource type="Animation" id=10]
+resource_name = "playerIdle"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("assets/idle:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"transitions": PoolRealArray( 9.51366, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "playerRun"
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("assets/run:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+}
+
+[sub_resource type="AnimationNodeAnimation" id=13]
+animation = "playerIdle"
+
+[sub_resource type="AnimationNodeAnimation" id=14]
+animation = "playerRun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=15]
+
+[sub_resource type="AnimationNodeStateMachine" id=11]
+states/playerIdle/node = SubResource( 13 )
+states/playerIdle/position = Vector2( 161, 50 )
+states/playerRun/node = SubResource( 14 )
+states/playerRun/position = Vector2( 416, 50 )
+transitions = [ "playerIdle", "playerRun", SubResource( 15 ) ]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=12]
+
+[node name="Player" type="KinematicBody2D"]
+modulate = Color( 0.929412, 0.894118, 0.894118, 1 )
+z_index = 1
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+visible = false
+position = Vector2( -5.96046e-08, 1 )
+scale = Vector2( 0.751953, 0.731354 )
+frames = SubResource( 6 )
+animation = "idle"
+frame = 3
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 1 )
+shape = SubResource( 7 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+limit_left = 0
+limit_top = 0
+limit_right = 1688
+limit_bottom = 544
+smoothing_enabled = true
+editor_draw_limits = true
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 2 )
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 1 )
+attenuation = 3.73213
+
+[node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 1 )
+volume_db = -23.483
+pitch_scale = 3.06
+
+[node name="Weapon" type="Area2D" parent="."]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Weapon"]
+position = Vector2( 0, -1.136 )
+shape = SubResource( 8 )
+
+[node name="assets" type="Sprite" parent="."]
+
+[node name="run" type="Sprite" parent="assets"]
+visible = false
+position = Vector2( 0.416667, -1.08333 )
+scale = Vector2( 0.713542, 0.880208 )
+texture = ExtResource( 3 )
+vframes = 3
+hframes = 3
+
+[node name="idle" type="Sprite" parent="assets"]
+position = Vector2( -9.53674e-07, 1 )
+scale = Vector2( 0.703125, 0.786458 )
+texture = ExtResource( 5 )
+vframes = 3
+hframes = 2
+frame = 1
+
+[node name="Sprite" type="Sprite" parent="assets"]
+visible = false
+texture = ExtResource( 6 )
+vframes = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/playerIdle = SubResource( 10 )
+anims/playerRun = SubResource( 9 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 11 )
+anim_player = NodePath("../AnimationPlayer")
+parameters/playback = SubResource( 12 )
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
